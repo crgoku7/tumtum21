@@ -6,14 +6,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
 <meta name="version" content="2.37.3" />
-
-<link rel="preload" href="img/bg_full.png" as="image">
-<link rel="preload" href="img/normal.png" as="image">
-<link rel="preload" href="img/confused.png" as="image">
-<link rel="preload" href="img/thinking.png" as="image">
-<link rel="preload" href="img/happy.png" as="image">
-<link rel="preload" href="img/hall.png" as="image">
-<link rel="preload" href="img/room.jpg" as="image">
 <!--
 
 SugarCube (v2.37.3): A free (gratis and libre) story format.
@@ -471,7 +463,68 @@ img:not(.speaker-image) {
 
 .success-message { color: lightgreen; font-weight: bold; text-align: center; margin-top: 10px; }
 .warning-message { color: yellow; text-align: center; margin-top: 10px; }
-.error-message { color: red; font-weight: bold; text-align: center; margin-top: 10px; }</style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-tag name="hall" color="orange"></tw-tag><tw-passagedata pid="1" name="Start" tags="" position="800,275" size="100,100">&lt;&lt;set $findPhone = 0&gt;&gt;
+.error-message { color: red; font-weight: bold; text-align: center; margin-top: 10px; }</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* Story JavaScript */
+
+(function() {
+    // This code runs once when the story is ready, after StoryInit has processed.
+    // At this point, all variables set in StoryInit will be available in `State.variables`.
+    jQuery(document).one(':storyready', function() {
+        console.log("Starting image preloading via JavaScript...");
+
+        // FIX: Declare imagesToPreload array here, at the beginning of this function's scope.
+        const imagesToPreload = []; 
+
+        // Add images from StoryInit variables (using the variable names you provided)
+        const imageVarNames = [
+            "normal", "thinking", "confused", "narrator", "happy",
+            "day34", "hall", "tus", "tusSil", "phoneLocked"
+        ];
+        imageVarNames.forEach(varName => {
+            const imagePath = State.variables[varName]; 
+            
+            if (imagePath && typeof imagePath === 'string') {
+                imagesToPreload.push(imagePath);
+            } else {
+                console.warn(`StoryInit variable "$${varName}" not found or not a string. Skipping preload for it.`);
+            }
+        });
+
+        // Add direct image paths for files in your list that were not explicitly set as variables in StoryInit
+        const directImagePaths = [
+            "img/bg_full.png",  
+            "img/room.jpg",     
+       
+        ];
+        directImagePaths.forEach(path => {
+            // Check to avoid duplicates in case a variable was also pointing to the same path
+            if (imagesToPreload.indexOf(path) === -1) { 
+                imagesToPreload.push(path);
+            }
+        });
+
+
+        const totalImages = imagesToPreload.length; // Now imagesToPreload is defined here
+
+        if (totalImages === 0) {
+            console.log("No images to preload found.");
+            return; // Exit if nothing to preload
+        }
+
+        imagesToPreload.forEach(function(src) {
+            const img = new Image();
+            img.src = src; 
+            
+            img.onload = function() {
+                // Preloading logic
+            };
+            img.onerror = function() {
+                console.warn(`Failed to preload: ${src}. Check path and file existence.`);
+            };
+        });
+
+        console.log(`Initiated preload for ${totalImages} images.`);
+    });
+}());</script><tw-tag name="hall" color="orange"></tw-tag><tw-passagedata pid="1" name="Start" tags="" position="800,275" size="100,100">&lt;&lt;set $findPhone = 0&gt;&gt;
 &lt;&lt;audio &quot;outro&quot; stop&gt;&gt;
 &lt;div class=&quot;start-menu-container&quot;&gt;
     &lt;h1&gt;TumTum&#39;s 21&lt;/h1&gt;
